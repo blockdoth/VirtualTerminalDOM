@@ -5,13 +5,14 @@ import abstract_classes.DOMNode
 import interfaces.FrameBuffer
 import Glyph
 
-class AsciiRect(
+class FormattedRect(
     id: String,
     xPos: Int,
     yPos: Int,
     override var width: Int,
     override var height: Int,
     val backgroundChar: Char,
+    override var formatting: String,
     ) : DOMNode(id, xPos,yPos) {
 
     override var localFramebuffer: FrameBuffer = CharFrameBuffer(width, height)
@@ -19,7 +20,7 @@ class AsciiRect(
         val (x,y) = getLocalOrigin()
         for (localY in 0 until height) {
             for (localX in 0 until width) {
-                frameBuffer.insertSingeGlyph(x + localX, y + localY, Glyph(backgroundChar, ""))
+                frameBuffer.insertSingeGlyph(x + localX, y + localY, Glyph(backgroundChar, formatting))
             }
         }
     }

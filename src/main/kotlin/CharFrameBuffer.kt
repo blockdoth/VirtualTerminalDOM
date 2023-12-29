@@ -6,10 +6,12 @@ class CharFrameBuffer(
     ) : FrameBuffer {
 
     private var frameBuffer: CharArray = CharArray(width * height)
+    private var formattingMap: MutableMap<Int, String> = mutableMapOf()
 
     override fun insertSingeGlyph(xPos: Int, yPos: Int, content: Glyph) {
-        val index = yPos * width + xPos
+        val index = flatCoords(xPos, yPos)
         frameBuffer[index] = content.content
+        formattingMap[index] = content.formatting
     }
 
 
@@ -23,8 +25,29 @@ class CharFrameBuffer(
     }
 
     override fun getGlyph(xPos: Int, yPos: Int): Glyph {
-        val index = yPos * width + xPos
-        return Glyph(frameBuffer[index])
+        val index = flatCoords(xPos, yPos)
+        return Glyph(frameBuffer[index], formattingMap[index]!!)
+    }
+
+
+
+    override fun copy(): CharFrameBuffer {
+        val newFrameBuffer = CharFrameBuffer(width, height)
+        newFrameBuffer.frameBuffer = frameBuffer.copyOf()
+        newFrameBuffer.formattingMap = formattingMap.toMutableMap()
+        return newFrameBuffer
+    }
+
+    override fun flatCoords(xPos: Int, yPos: Int): Int {
+        return yPos * width + xPos
+    }
+
+    override fun hashCode(): Int {
+        var result = width
+        result = 31 * result + height
+        result = 31 * result + frameBuffer.contentHashCode()
+        result = 31 * result + formattingMap.hashCode()
+        return result
     }
 
     override fun equals(other: Any?): Boolean {
@@ -36,15 +59,9 @@ class CharFrameBuffer(
         if (width != other.width) return false
         if (height != other.height) return false
         if (!frameBuffer.contentEquals(other.frameBuffer)) return false
+        if (formattingMap != other.formattingMap) return false
 
         return true
     }
-
-    override fun copy(): CharFrameBuffer {
-        val newFrameBuffer = CharFrameBuffer(width, height)
-        newFrameBuffer.frameBuffer = frameBuffer.copyOf()
-        return newFrameBuffer
-    }
-
 
 }

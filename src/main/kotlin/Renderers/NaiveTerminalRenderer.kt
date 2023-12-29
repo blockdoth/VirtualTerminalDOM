@@ -1,3 +1,5 @@
+package Renderers
+
 import interfaces.FrameBuffer
 import interfaces.Renderer
 

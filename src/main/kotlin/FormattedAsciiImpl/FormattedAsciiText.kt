@@ -5,14 +5,14 @@ import abstract_classes.DOMNode
 import interfaces.FrameBuffer
 import Glyph
 
-class AsciiText (
+class FormattedAsciiText(
     nodeId: String,
     xPos: Int,
     yPos: Int,
-
-    var content: String
-
+    var content: String,
+    override var formatting: String,
 ) : DOMNode(nodeId, xPos,yPos) {
+
 
     override var width: Int = content.length
     override var height: Int = 1
@@ -24,7 +24,7 @@ class AsciiText (
             if (x + i >= x + parent!!.width - 1) {
                 break
             }
-            frameBuffer.insertSingeGlyph(x + i, y, Glyph(content[i], ""))
+            frameBuffer.insertSingeGlyph(x + i, y, Glyph(content[i], formatting))
         }
     }
 

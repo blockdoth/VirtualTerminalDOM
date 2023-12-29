@@ -10,12 +10,13 @@ abstract class DOMNode(
     abstract var width: Int
     abstract var height: Int
     abstract var localFramebuffer: FrameBuffer
+    open var formatting: String = ""
+
 
     var parent: DOMNode? = null
     var hasUpdate: Boolean = true
     var children: MutableList<DOMNode> = mutableListOf()
     var DOMNodeMap : MutableMap<String, DOMNode> = mutableMapOf()
-
 
     fun hasUpdate(): Boolean {
         if (hasUpdate) {
@@ -45,8 +46,11 @@ abstract class DOMNode(
 
     fun addChild(node: DOMNode){
         node.parent = this
+        node.formatting = formatting + node.formatting
         children.add(node)
+        hasUpdate = true
     }
+
     fun getNode(id: String): DOMNode? {
         if (nodeId == id) {
             return this
@@ -73,7 +77,9 @@ abstract class DOMNode(
             hasUpdate = true
         }
 
+
     }
+
 
     fun setPos(x: Int, y: Int){
         if (xPos != x || yPos != y) {
@@ -91,6 +97,7 @@ abstract class DOMNode(
         }
         return outputBuffer;
     }
+    abstract fun draw(frameBuffer: FrameBuffer)
 
     fun getLocalOrigin(): Pair<Int, Int> {
         if (parent == null) {
@@ -117,7 +124,8 @@ abstract class DOMNode(
         return Pair(localX, localY)
     }
 
-    abstract fun draw(frameBuffer: FrameBuffer)
+
+
     fun printStructure(depth:Int, leave: Boolean): String{
         //TODO("Make this a separate program")
         var structure: String = nodeId + "\n"
@@ -128,7 +136,6 @@ abstract class DOMNode(
             }else {
                 folderStructure += " │ ".repeat(depth)
             }
-
             if (child == children.last()) {
                 folderStructure += " └ "
                 structure += folderStructure + child.printStructure(depth + 1, true)
@@ -139,5 +146,7 @@ abstract class DOMNode(
         }
         return structure
     }
+
+
 
 }

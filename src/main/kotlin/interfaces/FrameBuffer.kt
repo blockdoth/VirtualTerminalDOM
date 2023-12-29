@@ -15,4 +15,5 @@ interface FrameBuffer {
     fun copy(): FrameBuffer
 
 
+    fun flatCoords(xPos: Int, yPos: Int): Int
 }

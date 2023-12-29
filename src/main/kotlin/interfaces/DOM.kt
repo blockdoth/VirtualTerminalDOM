@@ -8,14 +8,15 @@ interface DOM {
     var height: Int
     var frameBuffer: FrameBuffer
 
-    var rootDOMNode : DOMNode
+    var root : DOMNode
+    var interpreter : Interpreter
 
     fun flatten(): FrameBuffer
 
 
     fun resize(width: Int, height: Int)
-    fun setDOM(interpretFile: DOMNode)
 
     fun findNode (id: String): DOMNode?
     fun printStructure()
+    fun update()
 }

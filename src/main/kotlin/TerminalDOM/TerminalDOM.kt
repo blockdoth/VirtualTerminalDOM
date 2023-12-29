@@ -2,41 +2,48 @@ package TerminalDOM
 
 import CharFrameBuffer
 import abstract_classes.DOMNode
-import interfaces.DOM
-import interfaces.FrameBuffer
+import interfaces.*
 
 class TerminalDOM (
-    override var width: Int,
-    override var height: Int,
-    override var rootDOMNode: DOMNode
+    override var interpreter: Interpreter
 ) : DOM {
+    private val pair: Pair<DOMNode, MutableList<Behavior>> = interpreter.interpret()
+    override var root: DOMNode = pair.first
+    private val behaviors: MutableList<Behavior> = pair.second
+
+    override var width: Int = root.width
+    override var height: Int = root.height
 
     override var frameBuffer: FrameBuffer = CharFrameBuffer(width, height)
 
+    override fun update() {
+        for (behavior in behaviors) {
+            behavior.update()
+        }
+    }
+
 
     override fun flatten(): FrameBuffer {
-        return rootDOMNode.flatten(frameBuffer)
+        return root.flatten(frameBuffer)
     }
+
 
     override fun resize(width: Int, height: Int) {
         TODO("Not yet implemented")
     }
 
-    override fun setDOM(dom: DOMNode) {
-        rootDOMNode = dom
-    }
-
     override fun findNode(id: String): DOMNode? {
-        if (id == rootDOMNode.nodeId) {
-            return rootDOMNode
+        if (id == root.nodeId) {
+            return root
         } else {
-            return rootDOMNode.getNode(id)
+            return root.getNode(id)
         }
     }
 
     override fun printStructure() {
         println("Program Structure:")
-        println(rootDOMNode.printStructure(0, false))
+        println(root.printStructure(0, false))
     }
+
 
 }

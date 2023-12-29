@@ -1,6 +1,8 @@
+package Renderers
+
 import interfaces.FrameBuffer
 
-class PatchTerminalRenderer : NaiveTerminalRenderer() {
+class FormattedPatchTerminalRenderer : FormattedNaiveTerminalRenderer() {
 
     var localFrameBuffer : FrameBuffer? = null
 
@@ -8,6 +10,7 @@ class PatchTerminalRenderer : NaiveTerminalRenderer() {
         var x: Int = 0
         var y: Int = 0
         var content: Char = ' '
+        var formatting: String = ""
     }
 
     override fun render(frameBuffer: FrameBuffer) {
@@ -18,12 +21,13 @@ class PatchTerminalRenderer : NaiveTerminalRenderer() {
         }
         val patchList: List<Patch> = generatePatchList(localFrameBuffer!!, frameBuffer)
 
+        val sb = StringBuilder()
         for (patch in patchList) {
-            val sb = StringBuilder()
-            //Ansi cursor coordinates are indexed 1
+            sb.append(patch.formatting)
             sb.append("\u001B[${patch.y + 1};${patch.x}H${patch.content}")
-            print(sb.toString())
+            sb.append("\u001B[0m")
         }
+        print(sb.toString())
         localFrameBuffer = frameBuffer.copy()
     }
 
@@ -44,6 +48,7 @@ class PatchTerminalRenderer : NaiveTerminalRenderer() {
                     patch.x = x
                     patch.y = y
                     patch.content = newGlyph.content
+                    patch.formatting = newGlyph.formatting
                     patchList.add(patch)
                 }
             }
