@@ -10,13 +10,12 @@ class AsciiText (
     xPos: Int,
     yPos: Int,
 
-    var content: String
+    override var content: String
 
 ) : DOMNode(nodeId, xPos,yPos) {
 
     override var width: Int = content.length
     override var height: Int = 1
-    override var localFramebuffer: FrameBuffer = CharFrameBuffer(width, height)
 
     override fun draw(frameBuffer: FrameBuffer) {
         val (x,y) = getLocalOrigin()

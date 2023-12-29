@@ -24,9 +24,11 @@ class FormattedPatchTerminalRenderer : FormattedNaiveTerminalRenderer() {
         val sb = StringBuilder()
         for (patch in patchList) {
             sb.append(patch.formatting)
-            sb.append("\u001B[${patch.y + 1};${patch.x}H${patch.content}")
+            sb.append("\u001B[${patch.y + 1};${patch.x + 1}H${patch.content}")
             sb.append("\u001B[0m")
+            //Thread.sleep(10)
         }
+        sb.append("\u001B[H")
         print(sb.toString())
         localFrameBuffer = frameBuffer.copy()
     }
@@ -43,7 +45,7 @@ class FormattedPatchTerminalRenderer : FormattedNaiveTerminalRenderer() {
             for (x in 0 until oldBuffer.width) {
                 val oldGlyph = oldBuffer.getGlyph(x, y)
                 val newGlyph = newBuffer.getGlyph(x, y)
-                if (oldGlyph.content != newGlyph.content) {
+                if (oldGlyph.content != newGlyph.content || oldGlyph.formatting != newGlyph.formatting) {
                     val patch = Patch()
                     patch.x = x
                     patch.y = y

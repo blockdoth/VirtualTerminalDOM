@@ -2,13 +2,12 @@ package interfaces
 
 import abstract_classes.DOMNode
 
-class StateFullBehavior(
-    override val node: DOMNode,
-    override val behavior: (node: DOMNode, state:Any) -> Any,
-    private var state: Any
+class StateLessBehavior(
+    val node: DOMNode,
+    val behavior: (node: DOMNode) -> Unit
 
-    ) : Behavior {
+) : Behavior {
     override fun update() {
-        state = behavior(node, state)
+        behavior(node)
     }
 }

@@ -25,7 +25,7 @@ open class FormattedNaiveTerminalRenderer: Renderer {
             }
             sb.append("\n")
         }
-
+        sb.append("\u001B[0m")
         print(sb.toString())
     }
 }

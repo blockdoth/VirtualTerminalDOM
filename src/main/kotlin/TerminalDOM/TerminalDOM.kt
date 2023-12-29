@@ -16,6 +16,8 @@ class TerminalDOM (
 
     override var frameBuffer: FrameBuffer = CharFrameBuffer(width, height)
 
+
+
     override fun update() {
         for (behavior in behaviors) {
             behavior.update()
@@ -26,6 +28,12 @@ class TerminalDOM (
     override fun flatten(): FrameBuffer {
         return root.flatten(frameBuffer)
     }
+
+    override fun flattenIncrementally (): MutableList<FrameBuffer> {
+        val incremetalBuffers: MutableList<FrameBuffer> = mutableListOf(frameBuffer)
+        return root.flattenIncrementally(incremetalBuffers)
+    }
+
 
 
     override fun resize(width: Int, height: Int) {

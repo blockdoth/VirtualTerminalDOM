@@ -15,7 +15,6 @@ class FormattedRect(
     override var formatting: String,
     ) : DOMNode(id, xPos,yPos) {
 
-    override var localFramebuffer: FrameBuffer = CharFrameBuffer(width, height)
     override fun draw(frameBuffer: FrameBuffer) {
         val (x,y) = getLocalOrigin()
         for (localY in 0 until height) {

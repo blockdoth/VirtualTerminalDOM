@@ -1,5 +1,6 @@
 import AsciiImpl.AsciiDOMNodeFactory
 import AsciiImpl.FormattedAsciiDOMNodeFactory
+import Renderers.FormattedPatchTerminalRenderer
 import TerminalDOM.TerminalDOM
 import TerminalDOM.TerminalWindow
 import interfaces.DOM
@@ -21,10 +22,13 @@ class App {
         dom.printStructure()
 
 
+        window.renderer = FormattedPatchTerminalRenderer()
         while (true) {
             dom.update()
-            window.draw(dom.flatten())
-            Thread.sleep(10)
+//            window.drawIncrementally(dom,500)
+            window.draw(dom)
+
+            Thread.sleep(50)
         }
     }
 

@@ -9,9 +9,8 @@ abstract class DOMNode(
     ) {
     abstract var width: Int
     abstract var height: Int
-    abstract var localFramebuffer: FrameBuffer
     open var formatting: String = ""
-
+    open var content: String = ""
 
     var parent: DOMNode? = null
     var hasUpdate: Boolean = true
@@ -35,12 +34,10 @@ abstract class DOMNode(
         this.height = height
         this.width = width
 
-        localFramebuffer.resize(width, height)
         for (child in children) {
             child.resize(width, height)
         }
         hasUpdate = true
-        flatten(localFramebuffer)
     }
 
 
@@ -69,16 +66,30 @@ abstract class DOMNode(
 
     fun move(xOffset: Int, yOffset: Int){
         if (xOffset != 0) {
-            xPos = (xPos + xOffset) % parent!!.width
+            xPos = xPos + xOffset
+            if (xPos < 0) {
+                xPos = 0
+            }
+            if (xPos + width>= parent!!.width) {
+                xPos %= parent!!.width
+            }
             hasUpdate = true
         }
         if (yOffset != 0) {
-            yPos = (yPos + yOffset) % parent!!.height
+            yPos = (yPos + yOffset)
+            if (yPos < 0) {
+                yPos = 0
+            }
+            if (yPos + height >= parent!!.height) {
+                yPos %= parent!!.height
+            }
             hasUpdate = true
         }
 
 
     }
+
+    //TODO("Set content and seizing")
 
 
     fun setPos(x: Int, y: Int){
@@ -88,15 +99,29 @@ abstract class DOMNode(
             hasUpdate = true
         }
     }
+
     fun flatten(outputBuffer: FrameBuffer): FrameBuffer {
         if (hasUpdate()) {
             draw(outputBuffer)
+
             for (child in children) {
                 child.flatten(outputBuffer)
             }
         }
         return outputBuffer;
     }
+
+    fun flattenIncrementally(incrementalBuffers: MutableList<FrameBuffer>): MutableList<FrameBuffer> {
+        val lastBuffer = incrementalBuffers.last().copy()
+        draw(lastBuffer)
+        incrementalBuffers.add(lastBuffer)
+        for (child in children) {
+            child.flattenIncrementally(incrementalBuffers)
+        }
+
+        return incrementalBuffers
+    }
+
     abstract fun draw(frameBuffer: FrameBuffer)
 
     fun getLocalOrigin(): Pair<Int, Int> {
@@ -106,6 +131,15 @@ abstract class DOMNode(
         val (parentX,parentY) = parent!!.getLocalOrigin()
 
         var localX = parentX + xPos
+
+        if (parent!!.width == 0) {
+            return Pair(localX, parentY + yPos)
+        }
+
+        if (parent!!.height == 0) {
+            return Pair(parentX + xPos, localX)
+        }
+
         if (localX < 0) {
             localX += width
         }

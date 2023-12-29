@@ -19,4 +19,5 @@ interface DOM {
     fun findNode (id: String): DOMNode?
     fun printStructure()
     fun update()
+    fun flattenIncrementally(): MutableList<FrameBuffer>
 }

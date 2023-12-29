@@ -12,5 +12,9 @@ class AsciiDOMNodeFactory : DOMNodeFactory {
         return AsciiText(nodeId, x, y, content)
     }
 
+    override fun createMultilineText(nodeId: String, x: Int, y: Int, content: String, formatting: String): DOMNode {
+        TODO("Not yet implemented")
+    }
+
 
 }
