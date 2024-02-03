@@ -1,18 +1,17 @@
-package AsciiImpl
+package main.kotlin.ui.elements
 
-import CharFrameBuffer
-import abstract_classes.DOMNode
-import interfaces.FrameBuffer
-import Glyph
+import main.kotlin.terminal.dom.DOMNode
+import main.kotlin.terminal.window.Glyph
+import main.kotlin.terminal.window.FrameBuffer
 
-class AsciiText (
+class AsciiText(
     nodeId: String,
     xPos: Int,
     yPos: Int,
-
-    override var content: String
-
+    override var content: String,
+    override var formatting: String,
 ) : DOMNode(nodeId, xPos,yPos) {
+
 
     override var width: Int = content.length
     override var height: Int = 1
@@ -23,7 +22,7 @@ class AsciiText (
             if (x + i >= x + parent!!.width - 1) {
                 break
             }
-            frameBuffer.insertSingeGlyph(x + i, y, Glyph(content[i], ""))
+            frameBuffer.insertSingeGlyph(x + i, y, Glyph(content[i], formatting))
         }
     }
 

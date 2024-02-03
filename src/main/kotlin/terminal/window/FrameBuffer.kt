@@ -1,14 +1,14 @@
-import interfaces.FrameBuffer
+package main.kotlin.terminal.window
 
-class CharFrameBuffer(
-    override var width: Int,
-    override var height: Int
-    ) : FrameBuffer {
+class FrameBuffer(
+    var width: Int,
+    var height: Int
+    ){
 
     private var frameBuffer: CharArray = CharArray(width * height)
     private var formattingMap: MutableMap<Int, String> = mutableMapOf()
 
-    override fun insertSingeGlyph(xPos: Int, yPos: Int, content: Glyph) {
+    fun insertSingeGlyph(xPos: Int, yPos: Int, content: Glyph) {
         val index = flatCoords(xPos, yPos)
         frameBuffer[index] = content.content
         formattingMap[index] = content.formatting
@@ -16,29 +16,29 @@ class CharFrameBuffer(
 
 
 
-    override fun resize(width: Int, height: Int) {
+    fun resize(width: Int, height: Int) {
         TODO("Not yet implemented")
     }
 
-    override fun getBuffer(): CharArray {
+    fun getBuffer(): CharArray {
         return frameBuffer
     }
 
-    override fun getGlyph(xPos: Int, yPos: Int): Glyph {
+    fun getGlyph(xPos: Int, yPos: Int): Glyph {
         val index = flatCoords(xPos, yPos)
         return Glyph(frameBuffer[index], formattingMap[index]!!)
     }
 
 
 
-    override fun copy(): CharFrameBuffer {
-        val newFrameBuffer = CharFrameBuffer(width, height)
+    fun copy(): FrameBuffer {
+        val newFrameBuffer = FrameBuffer(width, height)
         newFrameBuffer.frameBuffer = frameBuffer.copyOf()
         newFrameBuffer.formattingMap = formattingMap.toMutableMap()
         return newFrameBuffer
     }
 
-    override fun flatCoords(xPos: Int, yPos: Int): Int {
+    fun flatCoords(xPos: Int, yPos: Int): Int {
         return yPos * width + xPos
     }
 
@@ -54,7 +54,7 @@ class CharFrameBuffer(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as CharFrameBuffer
+        other as FrameBuffer
 
         if (width != other.width) return false
         if (height != other.height) return false

@@ -1,8 +1,13 @@
-import abstract_classes.DOMNode
-import interfaces.*
+package main.kotlin.ui.interpreters
+
+import main.kotlin.terminal.dom.DOMNode
+import main.kotlin.ui.elements.NodeFactory
+import main.kotlin.ui.behaviors.Behavior
+import main.kotlin.ui.behaviors.StateFullBehavior
+import main.kotlin.ui.behaviors.StateLessBehavior
 
 class CodeInterpreter(
-    override var factory: DOMNodeFactory
+    override var factory: NodeFactory
     ) : Interpreter {
 
 
@@ -68,13 +73,13 @@ class CodeInterpreter(
         }
 
 
-        val printStruct: (node: DOMNode) -> Unit = { node: DOMNode->
+        val printStruct: (node: DOMNode) -> Unit = { node: DOMNode ->
             var currentNode = node
             while (currentNode.parent != null) {
                 currentNode = currentNode.parent!!
             }
 
-            val struct = currentNode.printStructure(0, false).dropLast(1)
+            val struct = currentNode.toString(0, false).dropLast(1)
             val width = struct.lines().maxOf { it.length }
             val height = struct.lines().size
 
@@ -89,7 +94,7 @@ class CodeInterpreter(
 
 
 
-        val coordsBehavior: (node: DOMNode) -> Unit = { node: DOMNode->
+        val coordsBehavior: (node: DOMNode) -> Unit = { node: DOMNode ->
             val topLeft = node.children[0]
             val bottomRight = node.children[1]
 
@@ -104,7 +109,7 @@ class CodeInterpreter(
             bottomRight.yPos = node.height - 1
         }
 
-        val moveBehaviorFactory= { node: DOMNode,  xDir:Float,yDir:Float ->
+        val moveBehaviorFactory= { node: DOMNode, xDir:Float, yDir:Float ->
             StateFullBehavior(
                 node,
                 moveLogic,

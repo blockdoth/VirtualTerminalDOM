@@ -1,10 +1,10 @@
 package Renderers
 
-import Glyph
-import interfaces.FrameBuffer
-import interfaces.Renderer
+import main.kotlin.terminal.window.Glyph
+import main.kotlin.terminal.renderers.Renderer
+import main.kotlin.terminal.window.FrameBuffer
 
-open class FormattedNaiveTerminalRenderer: Renderer {
+open class NaiveRenderer: Renderer {
 
     override fun render(frameBuffer: FrameBuffer) {
         val sb = StringBuilder()

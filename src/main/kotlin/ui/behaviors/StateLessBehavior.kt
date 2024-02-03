@@ -1,6 +1,6 @@
-package interfaces
+package main.kotlin.ui.behaviors
 
-import abstract_classes.DOMNode
+import main.kotlin.terminal.dom.DOMNode
 
 class StateLessBehavior(
     val node: DOMNode,

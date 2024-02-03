@@ -1,28 +1,22 @@
-import AsciiImpl.AsciiDOMNodeFactory
-import AsciiImpl.FormattedAsciiDOMNodeFactory
-import Renderers.FormattedPatchTerminalRenderer
-import TerminalDOM.TerminalDOM
-import TerminalDOM.TerminalWindow
-import interfaces.DOM
-import interfaces.DOMNodeFactory
-import interfaces.Interpreter
-import interfaces.Window
+import main.kotlin.ui.elements.NodeFactory
+import Renderers.PatchRenderer
+import main.kotlin.terminal.dom.DOM
+import main.kotlin.terminal.window.TerminalWindow
+import main.kotlin.ui.interpreters.CodeInterpreter
+import main.kotlin.ui.interpreters.Interpreter
 
 class App {
-
-    lateinit var dom: DOM
-    lateinit var window: Window
-
     fun run() {
-        val factory: DOMNodeFactory = FormattedAsciiDOMNodeFactory()
+        val factory: NodeFactory = NodeFactory()
         val interpreter: Interpreter = CodeInterpreter(factory)
-        dom = TerminalDOM(interpreter)
-        window = TerminalWindow(dom.width, dom.height)
+        val dom = DOM(interpreter)
+        val window = TerminalWindow(dom.width, dom.height)
+        window.init()
 
-        dom.printStructure()
+        return;
+        print(dom.toString())
 
-
-        window.renderer = FormattedPatchTerminalRenderer()
+        window.renderer = PatchRenderer()
         while (true) {
             dom.update()
 //            window.drawIncrementally(dom,500)
@@ -31,7 +25,5 @@ class App {
             Thread.sleep(50)
         }
     }
-
-
 
 }

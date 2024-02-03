@@ -1,27 +1,45 @@
-package TerminalDOM
+package main.kotlin.terminal.window
 
-import Renderers.FormattedNaiveTerminalRenderer
-import Renderers.FormattedPatchTerminalRenderer
-import interfaces.DOM
-import interfaces.Renderer
-import interfaces.Window
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
+import Renderers.NaiveRenderer
+import main.kotlin.terminal.dom.DOM
+import main.kotlin.terminal.renderers.Renderer
 
 
 class TerminalWindow(
-    override var width: Int,
-    override var height: Int
-    ) : Window {
+    var width: Int,
+    var height: Int
+    ){
 
-    override var renderer: Renderer = FormattedNaiveTerminalRenderer()
+    var renderer: Renderer = NaiveRenderer()
         set(value) {
             field = value
         }
 
 
-    override fun resize(width: Int, height: Int) {
+    fun init() {
+        //print("\u001b[8;${w};${h}t")
+        print("\u001b[s\u001b[999;999H\u001b[6n\u001b[u")
+        try {
+            val processBuilder = ProcessBuilder("cmd", "/c", "chcp 65001")
+            processBuilder.redirectErrorStream(true)
+            val process = processBuilder.start()
+
+            val inputStream = process.inputStream
+            inputStream.reader().useLines { lines ->
+                lines.forEach { line ->
+                    println(line)
+                }
+            }
+
+            val exitCode = process.waitFor()
+            println("Command exited with code $exitCode")
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun resize(width: Int, height: Int) {
 //        try {
 //            val processCols = Runtime.getRuntime().exec("cmd.exe /c stty size")
 //
@@ -49,11 +67,11 @@ class TerminalWindow(
 //            e.printStackTrace()
 //        }
     }
-
-    override fun draw(dom: DOM) {
+    fun draw(dom: DOM) {
         renderer.render(dom.flatten())
     }
-    override fun drawIncrementally(dom: DOM, delay: Int) {
+
+    fun drawIncrementally(dom: DOM, delay: Int) {
         val frames = dom.flattenIncrementally()
         for (i in 1 until frames.size) {
             val frame = frames[i]

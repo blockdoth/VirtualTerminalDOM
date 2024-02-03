@@ -1,11 +1,10 @@
-package AsciiImpl
+package main.kotlin.ui.elements
 
-import CharFrameBuffer
-import abstract_classes.DOMNode
-import interfaces.FrameBuffer
-import Glyph
+import main.kotlin.terminal.dom.DOMNode
+import main.kotlin.terminal.window.FrameBuffer
+import main.kotlin.terminal.window.Glyph
 
-class FormattedRect(
+class Rect(
     id: String,
     xPos: Int,
     yPos: Int,

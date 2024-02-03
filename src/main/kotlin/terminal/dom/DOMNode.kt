@@ -1,6 +1,7 @@
-package abstract_classes
+package main.kotlin.terminal.dom
 
-import interfaces.FrameBuffer
+import main.kotlin.terminal.window.FrameBuffer
+
 
 abstract class DOMNode(
     val nodeId: String,
@@ -89,9 +90,6 @@ abstract class DOMNode(
 
     }
 
-    //TODO("Set content and seizing")
-
-
     fun setPos(x: Int, y: Int){
         if (xPos != x || yPos != y) {
             xPos = x
@@ -160,7 +158,7 @@ abstract class DOMNode(
 
 
 
-    fun printStructure(depth:Int, leave: Boolean): String{
+    fun toString(depth:Int, leave: Boolean): String{
         //TODO("Make this a separate program")
         var structure: String = nodeId + "\n"
         for (child in children) {
@@ -172,10 +170,10 @@ abstract class DOMNode(
             }
             if (child == children.last()) {
                 folderStructure += " └ "
-                structure += folderStructure + child.printStructure(depth + 1, true)
+                structure += folderStructure + child.toString(depth + 1, true)
             } else{
                 folderStructure += " ├ "
-                structure += folderStructure + child.printStructure(depth + 1, false)
+                structure += folderStructure + child.toString(depth + 1, false)
             }
         }
         return structure

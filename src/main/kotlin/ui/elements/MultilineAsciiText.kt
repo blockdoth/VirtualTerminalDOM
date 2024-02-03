@@ -1,11 +1,10 @@
-package FormattedAsciiImpl
+package main.kotlin.ui.elements
 
-import CharFrameBuffer
-import Glyph
-import abstract_classes.DOMNode
-import interfaces.FrameBuffer
+import main.kotlin.terminal.window.Glyph
+import main.kotlin.terminal.dom.DOMNode
+import main.kotlin.terminal.window.FrameBuffer
 
-class FormattedMultilineAsciiText(
+class MultilineAsciiText(
     nodeId: String,
     xPos: Int,
     yPos: Int,
